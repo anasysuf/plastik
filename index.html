@@ -26,6 +26,7 @@
                 background: white !important;
                 box-shadow: none !important;
                 border: none !important;
+                padding: 1cm; /* Jember isi tabel agar tidak terlalu mepet tepi */
             }
 
             .no-print {
@@ -34,7 +35,7 @@
 
             @page {
                 size: landscape;
-                margin: 1cm;
+                margin: 0mm; /* Menghilangkan margin bawaan browser untuk mematikan header/footer otomatis */
             }
         }
     </style>
@@ -206,6 +207,7 @@
                 <i class="fas fa-file-invoice-dollar text-yellow-300 text-2xl"></i>
                 <div>
                     <h2 class="text-xl font-bold">Daftar Harga Plastik OPP 3 Putri</h2>
+                    <p class="text-xs text-emerald-100">Laporan Rekapitulasi Daftar Harga</p>
                 </div>
             </div>
             <!-- Tombol Cetak Seluruh Tabel -->
@@ -222,9 +224,7 @@
                         <th class="p-3 border-b border-slate-200 text-center">No</th>
                         <th class="p-3 border-b border-slate-200">Ukuran (P x L)</th>
                         <th class="p-3 border-b border-slate-200 text-center">Tebal</th>
-                        <!-- Kolom Harga Beli diberi kelas print:hidden agar tersembunyi saat dicetak -->
                         <th class="p-3 border-b border-slate-200 text-right print:hidden">Harga Beli / Kg</th>
-                        <!-- Kolom HPP diberi kelas print:hidden agar tersembunyi saat dicetak -->
                         <th class="p-3 border-b border-slate-200 text-right bg-emerald-50 print:hidden">HPP / Gendel
                         </th>
                         <th class="p-3 border-b border-slate-200 text-right bg-amber-50 font-bold text-amber-900">Harga
@@ -334,6 +334,7 @@
             </table>
             <div
                 class="bg-slate-50 p-4 border-t border-slate-200 text-xs text-slate-500 flex justify-between items-center">
+                <span>* Harga Beli otomatis mengikuti nilai dari kalkulator utama di atas.</span>
                 <span class="font-bold">Total Item: 4 Jenis</span>
             </div>
         </div>
@@ -426,7 +427,6 @@
             document.getElementById('hasilHPP').innerText = formatRp(hpp);
             document.getElementById('hasilJual').innerText = formatRp(hargaJual);
 
-            // Perbarui seluruh nilai harga beli di tabel bawah agar sinkron dengan input atas
             sinkronkanHargaBeli(harga);
         }
 
@@ -459,7 +459,6 @@
         }
 
         function sinkronkanHargaBeli(hargaUtama) {
-            // Daftar item di tabel: [id, ukuran, lebar, tebal, panjangRoll]
             const items = [
                 { id: 1, p: 15, l: 8, t: 18, roll: 6000 },
                 { id: 2, p: 20, l: 10, t: 18, roll: 6000 },
@@ -468,12 +467,10 @@
             ];
 
             items.forEach(item => {
-                // Set nilai input readonly di tabel bawah sama dengan harga utama atas
                 const inputHarga = document.getElementById(`tabel_harga_${item.id}`);
                 if (inputHarga) {
-                    inputHarga.value = hargaUtama;
+                    inputHarga.value = formatRp(hargaUtama); // Menampilkan format Rupiah pada input readonly
                 }
-                // Hitung ulang HPP dan Jual baris tersebut
                 hitungTabelCepat(item.id, item.p, item.l, item.t, item.roll, hargaUtama);
             });
         }
