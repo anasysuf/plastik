@@ -1,0 +1,280 @@
+﻿<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem HPP Plastik 3 Putri</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-slate-50 min-h-screen p-4 md:p-8 font-sans text-slate-800">
+
+    <div class="max-w-5xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden mb-8">
+        <!-- Header -->
+        <div class="bg-indigo-700 p-6 text-white">
+            <h1 class="text-2xl font-bold flex items-center gap-3">
+                <i class="fas fa-calculator"></i> Kalkulator Harga Pokok Plastik
+            </h1>
+            <p class="text-indigo-200 mt-1 text-sm">Sistem HPP selaras dengan formula perhitungan Excel 3 Putri.</p>
+        </div>
+
+        <div class="p-6 md:p-8 grid grid-cols-1 lg:grid-cols-12 gap-8">
+
+            <!-- Left Panel: Input Form -->
+            <div class="lg:col-span-7 space-y-5">
+                <h2 class="text-lg font-semibold text-slate-700 border-b pb-2"><i
+                        class="fas fa-edit mr-2 text-indigo-500"></i>Parameter Pesanan & Bahan</h2>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+                    <!-- Harga Kilo -->
+                    <div class="col-span-1 sm:col-span-2 bg-indigo-50 p-3 rounded-lg border border-indigo-100">
+                        <label class="block text-sm font-semibold text-indigo-900 mb-1">Harga Beli Perkilo (Rp)</label>
+                        <input type="number" id="hargaKilo" value="45500"
+                            class="w-full border-gray-300 p-2.5 rounded shadow-sm focus:ring-2 focus:ring-indigo-400 font-mono text-lg font-bold"
+                            oninput="kalkulasi()">
+                    </div>
+
+                    <!-- Ukuran Plastik Jadi (Berjejer) -->
+                    <div class="col-span-1 sm:col-span-2 bg-emerald-50 p-4 rounded-lg border border-emerald-200">
+                        <p class="text-sm font-bold text-emerald-900 mb-3 border-b border-emerald-200 pb-1">Ukuran
+                            Kantong Jadi</p>
+                        <div class="flex gap-4">
+                            <!-- Kiri: Lebar ukuran diminta (B8 di Excel) -->
+                            <div class="w-1/2">
+                                <label class="block text-xs font-semibold text-emerald-700 mb-1">Lebar ukuran
+                                    diminta</label>
+                                <input type="number" id="panjangJadi" value="15"
+                                    class="w-full border-gray-300 p-2.5 rounded shadow-sm focus:ring-2 focus:ring-emerald-500 font-bold text-emerald-800 bg-white"
+                                    oninput="kalkulasi()">
+                                <p class="text-[10px] text-emerald-600 mt-1 leading-tight"><i
+                                        class="fas fa-arrow-down"></i> Penentu Hasil Lebar diminta</p>
+                            </div>
+                            <!-- Kanan: Lebar Plastik Asli -->
+                            <div class="w-1/2">
+                                <label class="block text-xs font-semibold text-emerald-700 mb-1">Lebar Plastik
+                                    (cm)</label>
+                                <input type="number" id="lebarJadi" value="8"
+                                    class="w-full border-gray-300 p-2.5 rounded shadow-sm focus:ring-2 focus:ring-emerald-500 font-bold text-emerald-800 bg-white"
+                                    oninput="kalkulasiLebarOtomatis()">
+                                <p class="text-[10px] text-emerald-600 mt-1 leading-tight"><i
+                                        class="fas fa-arrow-down"></i> Otomatis ubah Lebar Bahan</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Lebar Bahan Asli -->
+                    <div class="col-span-1 sm:col-span-2 bg-slate-100 p-3 rounded-lg border border-slate-200 relative">
+                        <label class="block text-sm font-bold text-slate-700 mb-1">Lebar Bahan Asli (mm)</label>
+                        <input type="number" id="lebarBahan" value="460"
+                            class="w-full border-gray-300 p-2.5 rounded shadow-sm bg-gray-200 text-slate-500 cursor-not-allowed font-bold"
+                            readonly>
+                        <p class="text-[11px] text-indigo-600 mt-1 font-medium"><i
+                                class="fas fa-lock text-slate-400 mr-1"></i> Terkunci. Rumus: (2x Lebar Plastik) + 2cm
+                        </p>
+                    </div>
+
+                    <!-- Tebal -->
+                    <div>
+                        <label class="block text-sm font-medium text-slate-600 mb-1">Tebal Plastik (Micron)</label>
+                        <select id="tebal"
+                            class="w-full border border-gray-300 p-2.5 rounded shadow-sm focus:ring-2 focus:ring-indigo-400 bg-white"
+                            onchange="autoFillPanjang(); kalkulasi()">
+                            <option value="17">17 Mic</option>
+                            <option value="18" selected>18 Mic</option>
+                            <option value="19">19 Mic</option>
+                            <option value="20">20 Mic</option>
+                            <option value="21">21 Mic</option>
+                            <option value="22">22 Mic</option>
+                            <option value="23">23 Mic</option>
+                            <option value="24">24 Mic</option>
+                            <option value="25">25 Mic</option>
+                            <option value="26">26 Mic</option>
+                            <option value="27">27 Mic</option>
+                            <option value="30">30 Mic</option>
+                            <option value="40">40 Mic</option>
+                        </select>
+                    </div>
+
+                    <!-- Panjang Bahan -->
+                    <div>
+                        <label class="block text-sm font-medium text-slate-600 mb-1">Panjang Bahan (Meter)</label>
+                        <input type="number" id="panjangRoll" value="6000"
+                            class="w-full border border-gray-300 p-2.5 rounded shadow-sm focus:ring-2 focus:ring-indigo-400"
+                            oninput="kalkulasi()">
+                    </div>
+
+                    <!-- Mode Berat Custom -->
+                    <div class="col-span-1 sm:col-span-2 border-t border-gray-200 pt-4 mt-2">
+                        <div class="flex items-center justify-between mb-2">
+                            <label class="text-sm font-bold text-slate-700">Berat (Kg)</label>
+                            <label
+                                class="flex items-center cursor-pointer bg-slate-100 px-3 py-1 rounded-full hover:bg-slate-200 transition">
+                                <span class="mr-2 text-xs font-semibold text-slate-600">Input Manual</span>
+                                <input type="checkbox" id="modeManual"
+                                    class="form-checkbox h-4 w-4 text-indigo-600 rounded cursor-pointer"
+                                    onchange="toggleModeBerat()">
+                            </label>
+                        </div>
+                        <input type="number" id="beratInput"
+                            class="w-full border border-gray-300 p-2.5 rounded shadow-sm focus:ring-2 focus:ring-indigo-400 bg-gray-100 text-slate-500 cursor-not-allowed font-bold"
+                            readonly oninput="kalkulasi()">
+                    </div>
+
+                    <!-- Operasional -->
+                    <div class="col-span-1 sm:col-span-2 border-t border-gray-200 pt-4">
+                        <label class="block text-sm font-medium text-slate-600 mb-1">Tenaga Operasional (Rp)</label>
+                        <input type="number" id="biayaOps" value="400000"
+                            class="w-full border border-gray-300 p-2.5 rounded shadow-sm focus:ring-2 focus:ring-indigo-400"
+                            oninput="kalkulasi()">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Panel: Results -->
+            <div
+                class="lg:col-span-5 bg-slate-800 rounded-xl p-6 text-white shadow-inner flex flex-col justify-center relative overflow-hidden">
+                <i class="fas fa-box-open absolute -bottom-10 -right-10 text-9xl text-slate-700 opacity-30"></i>
+
+                <h2
+                    class="text-lg font-semibold text-slate-300 border-b border-slate-600 pb-2 mb-6 z-10 flex justify-between items-center">
+                    <span>Ringkasan Hasil</span>
+                    <span class="text-xs bg-indigo-500 px-2 py-1 rounded font-mono" id="labelUkuran">15 x 8</span>
+                </h2>
+
+                <div class="space-y-5 z-10">
+                    <div class="flex justify-between items-center border-b border-slate-700 pb-2">
+                        <span class="text-slate-400 text-sm">Berat:</span>
+                        <span class="font-bold text-lg text-emerald-400" id="hasilBerat">0 Kg</span>
+                    </div>
+
+                    <div class="flex justify-between items-center border-b border-slate-700 pb-2">
+                        <span class="text-slate-400 text-sm">Total Modal:</span>
+                        <span class="font-bold text-lg" id="hasilModal">Rp 0</span>
+                    </div>
+
+                    <!-- INI ADALAH FIELD HASIL LEBAR DIMINTA -->
+                    <div class="flex justify-between items-center border-b border-slate-700 pb-2">
+                        <span class="text-yellow-400 font-bold text-sm">Hasil Lebar diminta:</span>
+                        <span class="font-bold text-lg text-yellow-300" id="hasilGendel">0 Gendel</span>
+                    </div>
+
+                    <div class="pt-4">
+                        <span class="block text-slate-300 text-sm mb-1 uppercase tracking-wider font-semibold">HARGA
+                            POKOK / GENDEL</span>
+                        <div class="bg-indigo-600 rounded-lg p-4 text-center border border-indigo-400 shadow-lg">
+                            <span class="text-3xl font-black tracking-tight" id="hasilHPP">Rp 0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        const formatRp = (angka) => {
+            return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(angka);
+        };
+
+        function autoFillPanjang() {
+            const tebal = parseFloat(document.getElementById('tebal').value);
+            const inputPanjang = document.getElementById('panjangRoll');
+
+            if ([17, 18, 20, 21].includes(tebal)) {
+                inputPanjang.value = 6000;
+            } else if ([25].includes(tebal)) {
+                inputPanjang.value = 4000;
+            } else if ([27, 30, 40].includes(tebal)) {
+                inputPanjang.value = 3000;
+            }
+        }
+
+        // Konversi lipatan ke bahan asli (Readonly)
+        function kalkulasiLebarOtomatis() {
+            const lebarJadi = parseFloat(document.getElementById('lebarJadi').value) || 0;
+            const lebarBahanMm = ((2 * lebarJadi) + 2) * 10;
+            document.getElementById('lebarBahan').value = lebarBahanMm;
+            kalkulasi();
+        }
+
+        function toggleModeBerat() {
+            const isManual = document.getElementById('modeManual').checked;
+            const beratInput = document.getElementById('beratInput');
+
+            if (isManual) {
+                beratInput.removeAttribute('readonly');
+                beratInput.classList.remove('bg-gray-100', 'text-slate-500', 'cursor-not-allowed');
+                beratInput.classList.add('bg-white', 'text-slate-900', 'ring-2', 'ring-indigo-200', 'bg-yellow-50');
+            } else {
+                beratInput.setAttribute('readonly', 'true');
+                beratInput.classList.remove('bg-white', 'text-slate-900', 'ring-2', 'ring-indigo-200', 'bg-yellow-50');
+                beratInput.classList.add('bg-gray-100', 'text-slate-500', 'cursor-not-allowed');
+            }
+            kalkulasi();
+        }
+
+        function kalkulasi() {
+            const harga = parseFloat(document.getElementById('hargaKilo').value) || 0;
+            const tebal = parseFloat(document.getElementById('tebal').value) || 0;
+            const lebarBahan = parseFloat(document.getElementById('lebarBahan').value) || 0;
+
+            // Nama variabel js tetap, tapi ini merujuk ke inputan user
+            const panjangRoll = parseFloat(document.getElementById('panjangRoll').value) || 0; // Panjang Bahan di Excel (B7)
+            const ukuranDiminta = parseFloat(document.getElementById('panjangJadi').value) || 0; // Lebar ukuran diminta (B8)
+            const lebarJadi = parseFloat(document.getElementById('lebarJadi').value) || 0;
+
+            const ops = parseFloat(document.getElementById('biayaOps').value) || 0;
+            const isManualBerat = document.getElementById('modeManual').checked;
+
+            // Update Label Ukuran di Panel Kanan sesuai posisi Kiri (Lebar ukuran diminta) x Kanan (Lebar Plastik)
+            document.getElementById('labelUkuran').innerText = `${ukuranDiminta} x ${lebarJadi}`;
+
+            if (ukuranDiminta === 0 || panjangRoll === 0) {
+                document.getElementById('hasilHPP').innerText = "Rp 0";
+                return;
+            }
+
+            let berat = 0;
+
+            // Hitung Berat
+            if (isManualBerat) {
+                berat = parseFloat(document.getElementById('beratInput').value) || 0;
+            } else {
+                let hitungBerat = (tebal * lebarBahan * panjangRoll * 0.91) / 1000000;
+                berat = Math.round(hitungBerat * 100) / 100;
+                document.getElementById('beratInput').value = berat.toFixed(2);
+            }
+
+            // Hitung Modal (B15 di excel)
+            const modal = (harga * berat) + ops;
+
+            // Hitung "Hasil Lebar diminta" (B16 di excel: B7/B8/10)
+            const hasilLebarDiminta = (panjangRoll / ukuranDiminta) / 10;
+
+            // Hitung HPP (B17 di excel)
+            let hpp = 0;
+            if (hasilLebarDiminta > 0) {
+                hpp = modal / hasilLebarDiminta;
+            }
+
+            // Tampilkan Hasil ke Layar
+            document.getElementById('hasilBerat').innerText = berat.toFixed(2) + " Kg";
+            document.getElementById('hasilModal').innerText = formatRp(modal);
+
+            // Ini dia Field Hasil Lebar diminta:
+            document.getElementById('hasilGendel').innerText = hasilLebarDiminta.toFixed(2) + " Gendel";
+
+            document.getElementById('hasilHPP').innerText = formatRp(hpp);
+        }
+
+        window.onload = function () {
+            autoFillPanjang();
+            kalkulasiLebarOtomatis();
+        };
+    </script>
+</body>
+
+</html>
