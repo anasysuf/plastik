@@ -198,17 +198,17 @@
                     <i class="fas fa-file-invoice-dollar text-yellow-300 text-2xl"></i>
                     <div>
                         <h2 class="text-base sm:text-xl font-bold">Daftar Harga Plastik OPP 3 Putri</h2>
-                        <p class="text-[11px] sm:text-xs text-emerald-100">Katalog Lengkap Berdasarkan Ketebalan Micron</p>
+                        <p class="text-[11px] sm:text-xs text-emerald-100">Katalog Lengkap Berdasarkan Panjang (P)</p>
                     </div>
                 </div>
                 
                 <div class="flex items-center justify-between sm:justify-end gap-2 w-full sm:w-auto no-print">
                     <div class="bg-emerald-700 p-1 rounded-lg flex gap-1">
                         <button onclick="setSortOrder('asc')" id="btn_sort_asc" class="px-2.5 py-1 rounded text-[11px] sm:text-xs font-bold bg-white text-emerald-800 shadow transition whitespace-nowrap">
-                            <i class="fas fa-sort-amount-down-alt mr-1"></i> Terkecil
+                            <i class="fas fa-sort-numeric-down mr-1"></i> Panjang Terkecil
                         </button>
                         <button onclick="setSortOrder('desc')" id="btn_sort_desc" class="px-2.5 py-1 rounded text-[11px] sm:text-xs font-bold text-white hover:bg-emerald-600 transition whitespace-nowrap">
-                            <i class="fas fa-sort-amount-down mr-1"></i> Terbesar
+                            <i class="fas fa-sort-numeric-down-alt mr-1"></i> Panjang Terbesar
                         </button>
                     </div>
 
@@ -292,16 +292,14 @@
                     p: item.p,
                     l: item.l,
                     t: mic,
-                    roll: pRoll,
-                    luas: item.p * item.l
+                    roll: pRoll
                 });
             });
         });
 
         let currentFilter = 18;
-        let sortOrder = 'asc';
+        let sortOrder = 'asc'; // Default berdasarkan panjang terkecil ke terbesar
 
-        // Mengatur maksimum desimal menjadi 0 agar tidak ada angka di belakang koma
         const formatRp = (angka) => {
             return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(angka);
         };
@@ -453,18 +451,20 @@
                 return item.t === currentFilter;
             });
 
+            // Pengurutan berdasarkan Panjang (P) terlebih dahulu
             filteredData.sort((a, b) => {
                 if (currentFilter === 'all') {
                     if (a.t !== b.t) {
-                        return a.t - b.t;
+                        return a.t - b.t; // Jika "Semua", kelompokkan micron dulu
                     }
                 }
                 
-                if (sortOrder === 'asc') {
-                    return a.luas - b.luas;
-                } else {
-                    return b.luas - a.luas;
+                // Urutkan berdasarkan nilai panjang (p)
+                if (a.p !== b.p) {
+                    return sortOrder === 'asc' ? a.p - b.p : b.p - a.p;
                 }
+                // Jika panjang sama, urutkan berdasarkan lebar (l)
+                return sortOrder === 'asc' ? a.l - b.l : b.l - a.l;
             });
 
             filteredData.forEach((item, index) => {
