@@ -10,64 +10,71 @@
     <style>
         @media print {
 
-            /* 1. Sembunyikan seluruh body dan elemen non-cetak */
-            body {
-                background: white !important;
-                margin: 0 !important;
-                padding: 0 !important;
-            }
-
-            body * {
-                visibility: hidden;
-            }
-
-            #areaCetakTabel,
-            #areaCetakTabel * {
-                visibility: visible;
-            }
-
-            /* 2. Berikan padding internal pada tabel agar tetap berjarak dari tepi kertas */
-            #areaCetakTabel {
-                position: absolute;
-                left: 0;
-                top: 0;
-                width: 100% !important;
-                background: white !important;
-                box-shadow: none !important;
-                border: none !important;
-                padding: 8mm 6mm !important;
-                margin: 0 !important;
-            }
-
+            /* 1. Sembunyikan elemen non-cetak */
             .no-print {
                 display: none !important;
             }
 
-            /* 3. Matikan penambahan teks link otomatis */
-            a[href]:after,
-            a:after {
-                content: "" !important;
-                display: none !important;
+            body {
+                background: white !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                font-size: 12pt !important;
+                color: #1e293b !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
             }
 
-            /* 4. Mencegah baris tabel terpotong di tengah lembar */
+            /* 2. Container tabel HARUS static agar iOS membaginya menjadi multi-halaman normal */
+            #areaCetakTabel {
+                position: static !important;
+                width: 100% !important;
+                background: white !important;
+                box-shadow: none !important;
+                border: none !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+
+            /* 3. Pengaturan tabel & pagination alami */
             table {
-                page-break-inside: auto;
+                width: 100% !important;
+                border-collapse: collapse !important;
+                page-break-inside: auto !important;
             }
 
             tr {
                 page-break-inside: avoid !important;
                 break-inside: avoid !important;
+                height: 38px !important;
+                /* Ketinggian baris pas dan proporsional */
+            }
+
+            td,
+            th {
+                padding: 8px 10px !important;
+                font-size: 11pt !important;
             }
 
             thead {
                 display: table-header-group !important;
             }
 
-            /* 5. KUNCI UNTUK IPHONE: Set margin 0 agar Safari tidak punya ruang mencetak URL */
+            tfoot {
+                display: table-footer-group !important;
+            }
+
+            /* 4. Cegah browser mencetak URL teks */
+            a[href]:after,
+            a:after {
+                content: "" !important;
+                display: none !important;
+            }
+
+            /* 5. Ukuran kertas A4 Portrait standar multi-page */
             @page {
-                size: auto;
-                margin: 0mm !important;
+                size: A4 portrait;
+                margin: 12mm 8mm;
             }
         }
     </style>
