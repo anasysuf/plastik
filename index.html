@@ -9,6 +9,14 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         @media print {
+
+            /* 1. Sembunyikan seluruh body dan elemen non-cetak */
+            body {
+                background: white !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+
             body * {
                 visibility: hidden;
             }
@@ -18,6 +26,7 @@
                 visibility: visible;
             }
 
+            /* 2. Berikan padding internal pada tabel agar tetap berjarak dari tepi kertas */
             #areaCetakTabel {
                 position: absolute;
                 left: 0;
@@ -26,7 +35,7 @@
                 background: white !important;
                 box-shadow: none !important;
                 border: none !important;
-                padding: 0 !important;
+                padding: 8mm 6mm !important;
                 margin: 0 !important;
             }
 
@@ -34,21 +43,20 @@
                 display: none !important;
             }
 
-            /* Mencegah browser mobile memunculkan teks link URL */
+            /* 3. Matikan penambahan teks link otomatis */
             a[href]:after,
             a:after {
                 content: "" !important;
                 display: none !important;
             }
 
-            /* Mencegah baris tabel terpotong jelek di tengah halaman */
+            /* 4. Mencegah baris tabel terpotong di tengah lembar */
             table {
                 page-break-inside: auto;
             }
 
             tr {
                 page-break-inside: avoid !important;
-                page-break-after: auto !important;
                 break-inside: avoid !important;
             }
 
@@ -56,13 +64,10 @@
                 display: table-header-group !important;
             }
 
-            tfoot {
-                display: table-footer-group !important;
-            }
-
+            /* 5. KUNCI UNTUK IPHONE: Set margin 0 agar Safari tidak punya ruang mencetak URL */
             @page {
-                size: portrait;
-                margin: 8mm 6mm;
+                size: auto;
+                margin: 0mm !important;
             }
         }
     </style>
